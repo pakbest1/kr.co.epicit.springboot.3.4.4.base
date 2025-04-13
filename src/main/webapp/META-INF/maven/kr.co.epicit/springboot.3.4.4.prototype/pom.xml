@@ -123,6 +123,12 @@
 			<artifactId>spring-restdocs-mockmvc</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite</artifactId>
+<!--			<version>1.11.0</version>-->
+			<scope>test</scope>
+		</dependency>
 		
 	</dependencies>
 
