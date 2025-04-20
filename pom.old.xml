@@ -37,6 +37,8 @@
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.test.skip>true</maven.test.skip>
 		
+		<maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
+			
 	</properties>
 	
 	<dependencies>
@@ -128,14 +130,9 @@
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-suite</artifactId>
+<!--			<version>1.11.0</version>-->
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<scope>test</scope>
-		</dependency>
-		
 		
 	</dependencies>
 
@@ -153,7 +150,6 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
-			<!--
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -166,91 +162,96 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			-->
+			
 			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>src/assembly/assembly.xml</descriptor>
-					</descriptors>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+			 * WEB-INF/classes 에 포함될 모든 자원을 jar파일로 생성하고 WEB-INF/lib에 포함시켜 빌드를 완성함.
+				진행순서)
+				1. .jar 생성
+				2. WEB-INF/classes 제거
+				3. .jar을 WEB-INF/lib에 포함
+				4. 최종 .war 파일 생성
 			-->
-
 			<!-- 1. JAR 생성 -->
-			<!--
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+<!--				<version>3.3.0</version>-->
 				<executions>
 					<execution>
 						<id>build-jar</id>
 						<goals>
 							<goal>jar</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- 2. 프로젝트 JAR을 복사해두기 -->
+			<!--
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-project-jar</id>
 						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
 						<configuration>
-							<includes>
-								<include>**/*</include> <!- -  **/*.class - ->
-							</includes>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.artifactId}</artifactId>
+									<version>${project.version}</version>
+									<type>jar</type>
+									<outputDirectory>${project.build.directory}/target-jar</outputDirectory>
+								</artifactItem>
+							</artifactItems>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 			-->
-
-			<!-- 3. WAR 만들면서 WEB-INF/classes 제거하고 custom-lib JAR을 포함 -->
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<archiveClasses>true</archiveClasses>
-					<attachClasses>false</attachClasses>
-					<packagingExcludes>WEB-INF/classes/**</packagingExcludes>
-					<!--
-					<webResources>
-						<resource>
-							<directory>${project.build.directory}</directory>
-							<includes><include>*.jar</include></includes>
-							<targetPath>WEB-INF/lib</targetPath>
-						</resource>
-					</webResources>
-					-->
-				</configuration>
-			</plugin>
-			
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.2</version>
+				<artifactId>maven-antrun-plugin</artifactId>
+<!--				<version>3.1.0</version>-->
 				<executions>
 					<execution>
+						<id>copy-self-jar</id>
+						<phase>package</phase> <!-- jar가 만들어진 직후 -->
+						<configuration>
+							<target>
+								<copy
+									file="${project.build.directory}/${project.build.finalName}.jar"
+									todir="${project.build.directory}/target-jar" />
+							</target>
+						</configuration>
 						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
+							<goal>run</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
-			
-			
+
+			<!-- 3. WAR 만들면서 WEB-INF/classes 제거하고 custom-lib JAR을 포함 -->
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<!--				<version>3.4.0</version>-->
+				<configuration>
+<!--					<archiveClasses>false</archiveClasses>-->
+<!--					<attachClasses>false</attachClasses>-->
+<!--					<packagingExcludes>WEB-INF/classes/**</packagingExcludes>-->
+					<webResources>
+						<resource>
+							<directory>${project.build.directory}/target-jar</directory>
+							<targetPath>WEB-INF/lib</targetPath>
+							<includes>
+								<include>*.jar</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
 			
 		</plugins>
 	</build>

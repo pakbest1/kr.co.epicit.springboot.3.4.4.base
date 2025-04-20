@@ -1,0 +1,32 @@
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+	<id>Deploy</id>
+	<!-- 출력 파일 포맷을 지정한다. -->
+	<formats>
+		<format>war</format>
+<!-- 		<format>zip</format> -->
+<!-- 		<format>tar.gz</format> -->
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>  <!-- war로 빌드할 파일 중 WEB-INF/classes/com (java class파일)을 제외한다. -->
+			<directory>target/${build.finalName}</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>**/*</include>
+			</includes>
+			<excludes>
+				<exclude>**/classes/com/**</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>  <!-- 수행이전에 생성한 jar(class 파일만 포함)를 WEB-INF/lib에 포함한다. -->
+			<directory>target</directory>
+			<outputDirectory>WEB-INF/lib</outputDirectory>
+			<includes>
+				<include>${build.finalName}.jar</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+</assembly>
