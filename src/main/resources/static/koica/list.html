@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body data-bs-theme="dark">
+<div class="app-nav" data-include="./_include_/nav.html?_="></div>
+<div class="container">
+	
+	<div class="app-query">
+		<form class="app-form" name="form">
+			<label class="app-form-item">
+				검색어
+				<input type=text name=keyword />
+			</label>
+			<label class="app-form-item">
+				<button> 검색 </button>
+			</label>
+		</form>
+	</div>
+	<div class="app-result">
+		<div class="app-result-head">
+		</div>
+		<table class="app-result-list grid">
+			<colgroup>
+				<col width="80px" />
+				<col />
+				<col width="120px"/>
+				<col width="160px"/>
+			</colgroup>
+			<thead>
+				<tr>
+					<th>NO.</th>
+					<th>제목</th>
+					<th>작성자</th>
+					<th>작성일시</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody><!--<if test="row.isNew == true"> [new]</if> -->
+			<script class="tbody-template" type="text/template" >
+			<choose><when test="rows != null">
+				<foreach index="idx" collection="rows" item="row">
+				<tr>
+					<td class="txtc">${idx + 1}</td>
+					<td class="txtl">${row.title}<if test="row.isNew == 'Y'"> [new]</if></td>
+					<td class="txtc">${row.writer}</td>
+					<td class="txtc">${row.wrdttm}</td>
+				</tr>
+				</foreach>
+			</when><otherwise>
+				<tr><th colspan="4"> 조회 결과가 없습니다. </th></tr>
+			</otherwise></choose>
+			</script>
+		</table>
+		<div class="app-result-foot">
+		</div>
+	</div>
+	
+</div>
+<div class="app-foot" data-include="./_include_/foot.html?_="></div>
+
+<link rel="stylesheet" href="/bootstrap/5.0.2/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/assets/css/bootstrap5.dark.css"/>
+<script type="text/javascript" src="/jquery/3.7.1/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="/bootstrap/5.0.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="/jquery/plugins/jquery.plugin.databind.js"></script>
+
+<link rel="stylesheet" href="/assets/app/app.prototype.css"/>
+<script type="text/javascript" src="/assets/app/app.prototype.js"></script>
+<script type="text/javascript">
+$('.app-form').on('submit', (e)=>{
+	let data = { rows: [
+		{ idx:  1, wrdttm: '2025-04-27 01:12', writer: 'SpringBoot', title: 'Spring에서 정적 리소스 서버 재기동 없이 바로 적용하는법', isNew: 'Y' },
+		{ idx:  2, wrdttm: '2025-04-25 12:22', writer: 'SpringBoot', title: 'Spring에서 정적 리소스 서버 재기동 없이 바로 적용하는법' },
+		{ idx:  3, wrdttm: '2025-04-25 13:32', writer: 'SpringBoot', title: 'Spring에서 정적 리소스 서버 재기동 없이 바로 적용하는법' },
+		{ idx:  4, wrdttm: '2025-04-25 14:42', writer: 'SpringBoot', title: 'Spring에서 정적 리소스 서버 재기동 없이 바로 적용하는법' },
+		{ idx:  5, wrdttm: '2025-04-25 15:52', writer: 'SpringBoot', title: 'Spring에서 정적 리소스 서버 재기동 없이 바로 적용하는법' },
+		{ idx:  6, wrdttm: '2025-04-25 16:02', writer: 'SpringBoot', title: 'Spring에서 정적 리소스 서버 재기동 없이 바로 적용하는법' },
+		{ idx:  7, wrdttm: '2025-04-25 17:12', writer: 'SpringBoot', title: 'Spring에서 정적 리소스 서버 재기동 없이 바로 적용하는법' },
+		{ idx:  8, wrdttm: '2025-04-25 18:22', writer: 'SpringBoot', title: 'Spring에서 정적 리소스 서버 재기동 없이 바로 적용하는법' },
+		{ idx:  9, wrdttm: '2025-04-25 19:32', writer: 'SpringBoot', title: 'Spring에서 정적 리소스 서버 재기동 없이 바로 적용하는법' },
+		{ idx: 10, wrdttm: '2025-04-25 10:42', writer: 'SpringBoot', title: 'Spring에서 정적 리소스 서버 재기동 없이 바로 적용하는법' },
+		{ idx: 11, wrdttm: '2025-04-25 21:52', writer: 'SpringBoot', title: 'Spring에서 정적 리소스 서버 재기동 없이 바로 적용하는법' },
+	]};
+	$('.app-result-list.grid').databind(data);
+	e.preventDefault();
+});
+$('.app-form').trigger('submit');
+</script>
+</body>
+</html>

@@ -37,16 +37,15 @@ const $ajax = (() => {
 		}
 	};
 	
-	async function request(method, url, data = {}, headers = {}) {
+	async function request(url, method='GET', data = {}, headers = {}) {
 		this.controller = new AbortController();
 		const signal = this.controller.signal;
 		this.showIndicator(true);
 		
 		let opts = {
-			method: method,
+			method: method.toUpperCase(),
 			headers: {
-				'Content-Type': 'application/json',
-				'Accept'      : 'application/json',
+				'Content-Type': 'application/json','Accept': 'application/json',
 				...headers,
 			},
 			signal,
@@ -57,7 +56,7 @@ const $ajax = (() => {
 			opts.body = JSON.stringify(data);
 		} else if (data && Object.keys(data).length) {
 			const query = new URLSearchParams(data).toString();
-			url += `?${query}`;
+			url += (!url.includes('?')?'?':'&')+`${query}`;
 		}
 		try {
 			const response = await fetch(url, opts);

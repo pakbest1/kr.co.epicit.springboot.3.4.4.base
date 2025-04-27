@@ -1,5 +1,5 @@
 class Ajax {
-	constructor(baseURL = '') {
+	constructor(baseURL='') {
 		this.baseURL = baseURL;
 		this.controller = null;
 		

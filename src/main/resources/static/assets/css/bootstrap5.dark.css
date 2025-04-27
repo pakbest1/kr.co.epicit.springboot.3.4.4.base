@@ -1,0 +1,16 @@
+@charset "utf-8";
+
+[data-bs-theme="dark"] {
+	background-color: #333;
+	color: #eee;
+}
+
+[data-bs-theme="dark"] .card {
+	background-color: #1e1e1e;
+	border-color: #333;
+}
+
+[data-bs-theme="dark"] .btn-primary {
+	background-color: #0d6efd;
+	border-color: #0d6efd;
+}
