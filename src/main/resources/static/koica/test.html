@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body data-bs-theme="dark">
+<div class="app-nav" data-include="./_include_/nav.html?_="></div>
+<div class="container">
+	
+
+<script type="text/xml" id="templateA0">
+<choose>
+  <when test="user.age >= 18">
+    Adult: ${user.name}
+  </when>
+  <otherwise>
+    Child: #{user.name}
+  </otherwise>
+</choose>
+</script>
+<div class="result" data-template="templateA0" data-data="tdata"></div>
+
+
+</div>
+<div class="app-foot" data-include="./_include_/foot.html?_="></div>
+
+<link rel="stylesheet" href="/bootstrap/5.0.2/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/assets/css/bootstrap5.dark.css"/>
+<script type="text/javascript" src="/jquery/3.7.1/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="/bootstrap/5.0.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
+<!-- <script type="text/javascript" src="/jquery/plugins/jquery.plugin.databind.js"></script> -->
+<script type="text/javascript" src="/jquery/plugins/jquery.plugin.mybatis.js"></script>
+
+<link rel="stylesheet" href="/assets/app/app.prototype.css"/>
+<script type="text/javascript" src="/assets/app/app.prototype.js"></script>
+<script>
+const template = $('#templateA0').html();
+const data = { user: { name: "Alice", age: 17 } };
+
+const result = $.jqMybatis(template, data).trim();
+console.log(result); // Adult: Alice
+$('.result').html(result);
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 (function($) {
-	$.mybatisTemplate = function(template, context = {}) {
+	$.jqMybatis = function(template, context = {}) {
 		template = removeComment(template);  //template = template.replace(/<!--[\s\S]*?-->/g, ''); // Remove comments
 		const dom = new DOMParser().parseFromString(`<root>${template}</root>`, 'application/xml').documentElement;
 		
@@ -81,7 +81,7 @@
 			// Default: process children
 			return Array.from(node.childNodes).map(n => render(n, ctx)).join('');
 		}
-	
+		
 		return render(dom, context);
 	};
 })(jQuery);
